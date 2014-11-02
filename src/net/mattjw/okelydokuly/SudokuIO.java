@@ -19,12 +19,12 @@ import java.io.PrintWriter;
  * Input and output of Sudoku grids.
  */
 public class SudokuIO {
-    /*
+    /**
      * Character used in the plain text files to represent the blank cell.
      */
     private static final char BLANK_CELL_CHAR = '0';
 
-    /*
+    /**
      * Delimiter used in the text files; i.e., a comma.
      */
     private static final char CELL_DELIM = ',';

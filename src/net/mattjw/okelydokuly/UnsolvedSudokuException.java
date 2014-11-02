@@ -8,7 +8,7 @@
 
 package net.mattjw.okelydokuly;
 
-/* 
+/**
  * Exception thrown if a Sudoku puzzle could not be solved by the solver; e.g.,
  * because the grid arrangement is invalid.
  */

@@ -61,10 +61,12 @@ public class ValueSet implements Iterable<Integer>
         return set.isEmpty();
     }
     
+    @Override
     public Iterator<Integer> iterator() {
         return set.iterator();
     }
     
+    @Override
     public String toString() {
         return set.toString();
     }

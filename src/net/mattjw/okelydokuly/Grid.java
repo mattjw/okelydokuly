@@ -108,6 +108,7 @@ public class Grid {
      *
      * @return Sudoku in 9x9 comma-separated format
      */
+    @Override
     public String toString() {
         StringBuffer buff = new StringBuffer();
         
@@ -383,7 +384,7 @@ public class Grid {
         return numAssigned == 81;
     }
     
-    /*
+    /**
      * This method will look at each unassigned cell that is affected by
      * assignment to the given cell. (These are the unassigned cells on the
      * same row, column, and/or square as the given cell).
@@ -441,7 +442,7 @@ public class Grid {
         return true;
     }
     
-    /*
+    /**
      * This method will count the number of times the given value
      * appears in the domains of the unassigned cells that are
      * dependent on the given cell.
@@ -531,7 +532,7 @@ public class Grid {
         return count;
     }
     
-    /*
+    /**
      * This method will create a ValueSet containing each value that can be
      * legally assigned to the given cell in the given matrix (2D array)
      * representation of a Sudoku.

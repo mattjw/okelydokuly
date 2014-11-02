@@ -14,7 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import net.mattjw.okelydokuly.ArgParse.Arguments;
 
-/*
+/**
+ * Solve Sudoku puzzles using a constraint-satisfcation backtracking search.
+ *
  * This class has two purposes:
  *  1. It implements a backtracking search algorithm which solves the Sudoku
  *     puzzle as a constraint satisfaction problem, relying heavily on the 

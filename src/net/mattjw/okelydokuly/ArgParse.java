@@ -10,12 +10,23 @@ package net.mattjw.okelydokuly;
 
 import java.io.File;
 
-/**
+/** 
  * Parse arguments for the Sudoku command line tool.
  */
 public class ArgParse {
+    /**
+     * Name of the application.
+     */
     public static final String NAME = "okelydokuly";
+
+    /**
+     * Name of the class implementing the command-line application.
+     */
     public static final String APP_CLASSNAME = "Solver";
+
+    /**
+     * Usage help text.
+     */
     public static final String USAGE = 
         NAME + ": a Sudoku puzzle solver\n" + 
         "\n" +
@@ -30,6 +41,7 @@ public class ArgParse {
         "\n" +
         "Options:\n" + 
         "  --help    Display this help prompt.\n";
+
     private static final String HELP_FLAG = "--help";
 
     /**
@@ -42,8 +54,8 @@ public class ArgParse {
 
         /**
          * Arguments for the tool.
-         * @param inFile Location of the Sudoku to be solved.
-         * @param outFile Location to save the solution (may be null if file output not requested).
+         * @param sudokuIn Location of the Sudoku to be solved.
+         * @param sudokuOut Location to save the solution (may be null if file output not requested).
          * @param helpFlag The flag to print help information. If true, then other arguments may be null.
          */
         public Arguments(File sudokuIn, File sudokuOut, boolean helpFlag) {
