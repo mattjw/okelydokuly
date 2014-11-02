@@ -16,6 +16,8 @@ public class InvalidSudokuFileException extends RuntimeException {
     /**
      * Construct an `InvalidSudokuFileException` instance with a given
      * message.
+     *
+     * @param msg Error message.
      */
     public InvalidSudokuFileException(String msg) {
         super(msg);

@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.Collections;
 
-/*
+/**
  * This class represents a Sudoku grid throughout the solving process; i.e.,
  * from unsolved, to partially solved, to solved. It implements many of the CSP
  * operations (such as assignment) that relate to the Sudoku grid.
@@ -25,9 +25,8 @@ import java.util.Collections;
  * Note that this is implemented specifically for 9x9 Sudoku grids. Cells are
  * expected to be integer values between 1 and 9.
  */
-public class Grid
-{   
-    /*
+public class Grid {   
+    /**
      * The integer value used to represent a blank cell.
      */
     public static final int BLANK_CELL = -1;
@@ -49,7 +48,7 @@ public class Grid
                                  // grid (this allows for more efficient
                                  // checking of whether the grid is complete)
     
-    /*
+    /**
      * Construct a Sudoku grid object from a 2 dimensional array of integers.
      *
      * -1 is used to indicate an empty cell in the Sudoku. The array is indexed
@@ -63,23 +62,20 @@ public class Grid
      * It does not check if the arrangement of values on the grid is valid for
      * a sudoku grid, or if the grid is solvable.
      */
-    public Grid( int[][] matrix )
-    {
+    public Grid(int[][] matrix) {
         /* Validate the matrix */
-        if( matrix.length != 9 )
+        if(matrix.length != 9)
             throw new InvalidSudokuGridException("Grid must be 9 rows high.");
 
-        for( int row=0; row < 9; row++ ) {
-            if( matrix[row].length != 9 )
+        for(int row=0; row < 9; row++) {
+            if(matrix[row].length != 9)
                 throw new InvalidSudokuGridException("Each row must be 9 cells wide.");
         }
 
-        for( int row=0; row < 9; row++ )
-        {
-            for( int col=0; col < 9; col++ )
-            {
+        for(int row=0; row < 9; row++) {
+            for(int col=0; col < 9; col++) {
                 int cell = matrix[row][col];
-                if( !((cell == BLANK_CELL) || ( (cell >= 1) && (cell <= 9) ) ) )
+                if( !( (cell == BLANK_CELL) || ((cell >= 1) && (cell <= 9)) ) )
                     throw new InvalidSudokuGridException("A cell must be a blank or between 1 and 9.");
             }
         }
@@ -94,52 +90,51 @@ public class Grid
         numAssigned = 0;
         
         // Determine the possible values each entry may be assigned with
-        for( int row=0; row < 9; row++ )
-        {
-            for( int col=0; col < 9; col++ )
-            {
+        for(int row=0; row < 9; row++) {
+            for(int col=0; col < 9; col++) {
                 // Check if the cell is a blank (unassigned) cell
-                if( matrix[row][col] == BLANK_CELL )
-                    aVals[row][col] = getPotentialValues( matrix, row, col );
+                if(matrix[row][col] == BLANK_CELL)
+                    aVals[row][col] = getPotentialValues(matrix, row, col);
                 else
                     numAssigned++;
             }
         }
     }
 
-    /* 
+    /**
      * Returns a string representation of the Sudoku grid.
-     * This follows the 9 row by 9 column comma-separated format, with the
-     * exception that blank cells (if present) are represented by underscores.
+     *
+     * This adheres to the 9 row by 9 column comma-separated format.
+     *
+     * @return Sudoku in 9x9 comma-separated format
      */
-    public String toString()
-    {
+    public String toString() {
         StringBuffer buff = new StringBuffer();
         
-        for( int row=0; row < matrix.length; row++ )
-        {
-            for( int col=0; col < matrix[row].length; col++ )
-            {
-                if( matrix[row][col] == BLANK_CELL )
-                    buff.append( "_" );
+        for(int row=0; row < matrix.length; row++) {
+            for(int col=0; col < matrix[row].length; col++) {
+                if(matrix[row][col] == BLANK_CELL)
+                    buff.append("0");
                 else
-                    buff.append( matrix[row][col] );
-                if( col < (matrix[row].length-1) )
+                    buff.append(matrix[row][col]);
+                if(col < (matrix[row].length-1))
                     buff.append(",");
             }
             
             // Only insert newlines BETWEEN rows
-            if( row < (matrix.length-1) )
-                buff.append( "\n" );
+            if(row < (matrix.length-1))
+                buff.append("\n");
         }
         
         return buff.toString();
     }
 
-    /*
+    /**
      * Get the value of a particular cell.
      * 
-     * `row` and `col` are indexed from 0.
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @return Value of the specified cell.
      */
     public int getCellAt(int row, int col) {
         return matrix[row][col];
@@ -149,7 +144,7 @@ public class Grid
      * ********** CSP SOLVER METHODS **********
      */
     
-    /*
+    /**
      * This method will choose an unassigned cell in the Sudoku grid.
      * It returns a two element array. The first element is the row number of 
      * the located cell, the second element is the column number of the located 
@@ -161,9 +156,10 @@ public class Grid
      * ValueSet (i.e. the domain for the cell)).
      *
      * It is assumed that the gird is not complete when this method is called.
+     *
+     * @return Array of two elements specifying the cell's row and column index.
      */
-    public int[] selectUnassignedCell()
-    {
+    public int[] selectUnassignedCell() {
         assert !isComplete();
         
         
@@ -174,23 +170,19 @@ public class Grid
                                      // (1 is the best)
         
         /* Iterate over the whole matrix to find unassigned cells */
-        for( int row=0; row < 9; row++ )
-        {
-            for( int col=0; col < 9; col++ )
-            {
+        for(int row=0; row < 9; row++) {
+            for(int col=0; col < 9; col++) {
                 // Check if we have an unassigned cell
-                if( matrix[row][col] == BLANK_CELL )
-                {
+                if(matrix[row][col] == BLANK_CELL) {
                     int numChoices = aVals[row][col].size();
-                    if( numChoices < bestNumChoices )
-                    {
+                    if(numChoices < bestNumChoices) {
                         bestRow = row;
                         bestCol = col;
                         bestNumChoices = numChoices;
                         
                         // 1 is the best possible number of choices for a cell,
                         // so we can return early if we find such a cell
-                        if( bestNumChoices == 1 )
+                        if(bestNumChoices == 1)
                             return new int[] { bestRow, bestCol };
                     }
                 }
@@ -200,7 +192,7 @@ public class Grid
         return new int[] { bestRow, bestCol };
     }
     
-    /*
+    /**
      * This method will return a list of the possible values that the given cell
      * may be assigned with.
      *
@@ -210,11 +202,14 @@ public class Grid
      * least-constrained value for an unassigned cell X is the value v that rules
      * out fewest choices for other unassigned cells that are affected by the
      * assignment of v to X.
+     *
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @return List of assignable values.
      */
-    public List<Integer> getOrderedDomainValues( int row, int col )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
+    public List<Integer> getOrderedDomainValues(int row, int col) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
         assert matrix[row][col] == BLANK_CELL;
         
         
@@ -226,32 +221,29 @@ public class Grid
         List<Integer> valList = new Vector<Integer>();
         List<Integer> cntList = new Vector<Integer>();
         
-        for( Integer val : aVals[row][col] )
-        {
-            int countInt = countChoicesRuledOut( row, col, val.intValue() ); 
-            Integer countObj = new Integer( countInt );
+        for(Integer val : aVals[row][col]) {
+            int countInt = countChoicesRuledOut(row, col, val.intValue()); 
+            Integer countObj = new Integer(countInt);
             
-            int index = Collections.binarySearch( cntList, countObj );
+            int index = Collections.binarySearch(cntList, countObj);
             
-            if( index < 0 )
-            {
+            if(index < 0) {
                 int insertionPoint = -(index) - 1;
                 
-                valList.add( insertionPoint, val );
-                cntList.add( insertionPoint, countObj );
+                valList.add(insertionPoint, val);
+                cntList.add(insertionPoint, countObj);
             }
-            else
-            {
+            else {
                 int insertionPoint = index + 1;
-                valList.add( insertionPoint, val );
-                cntList.add( insertionPoint, countObj );
+                valList.add(insertionPoint, val);
+                cntList.add(insertionPoint, countObj);
             }
         }
         
         return valList; 
     }
     
-    /*
+    /**
      * This method will assign an unassigned cell will the given value.
      *
      * After carrying this out, the method also handles updating the ValueSets
@@ -263,14 +255,17 @@ public class Grid
      *
      * Finally, this method will also update the assignedCount (this is important
      * for the isComplete() method).
+     *
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @param val New value for this cell.
      */
-    public void assignCell( int row, int col, int val )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
-        assert (val >= 1) && ( val <= 9 );
+    public void assignCell(int row, int col, int val) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
+        assert (val >= 1) && (val <= 9);
         assert matrix[row][col] == BLANK_CELL : "Only an unassigned cell may be assigned a value";
-        assert aVals[row][col].contains( val ) : "A cell may only be assigned with a value that is in its set of potential values" ;
+        assert aVals[row][col].contains(val) : "A cell may only be assigned with a value that is in its set of potential values" ;
         
         
         /* Carry out the assignment */
@@ -280,19 +275,17 @@ public class Grid
         
         /* Update the potential values for this cell's row, column and square */
         // Update row...
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check the cell is unassigned
-            if( matrix[row][i] == BLANK_CELL )
-                aVals[row][i].remove( val );
+            if(matrix[row][i] == BLANK_CELL)
+                aVals[row][i].remove(val);
         }
         
         // Update column...
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check the cell is unassigned
-            if( matrix[i][col] == BLANK_CELL )
-                aVals[i][col].remove( val );
+            if(matrix[i][col] == BLANK_CELL)
+                aVals[i][col].remove(val);
         }
         
         // Update square...
@@ -300,19 +293,19 @@ public class Grid
         int baseRow = row - (row%3);
         int baseCol = col - (col%3);
         
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int rowOff = i / 3;        
             int colOff = i % 3;
             
             // Check the cell is unassigned
-            if( matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL )
-                aVals[baseRow+rowOff][baseCol+colOff].remove( val );
+            if(matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL)
+                aVals[baseRow+rowOff][baseCol+colOff].remove(val);
         }
     }
     
-    /*
+    /**
      * This method will unassign an assigned cell.
+     *
      * After carrying this out, the method also handles updating the ValueSets
      * (domains) for the cells affected by this unassignment. The aim of the
      * update is to return the domains of all the unassigned cells back to what 
@@ -328,11 +321,13 @@ public class Grid
      *
      * Finally, this method will also update the assignedCount (this is 
      * important for the isComplete() method).
+     *
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
      */
-    public void unassignCell( int row, int col )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
+    public void unassignCell(int row, int col) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
         assert matrix[row][col] != BLANK_CELL : "Only non-blank cells can be unassigned";
         assert aVals[row][col] != null : "Only cells that were unassigned in the initial grid may be unassigned";
         
@@ -345,22 +340,20 @@ public class Grid
         
         /* Update the potential values for this cell's row, column and square */
         // Update row...
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check the cell was INITIALLY unassigned
             // (a null entry in the aVals array indicates that the corresponding
             // Sudoku cell is not assignable, thus does not need to have
             // its domain recalculated)
-            if( aVals[row][i] != null )
-                aVals[row][i] = getPotentialValues( matrix, row, i );
+            if(aVals[row][i] != null)
+                aVals[row][i] = getPotentialValues(matrix, row, i);
         }
         
         // Update column...
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check the cell was INITIALLY unassigned
-            if( aVals[i][col] != null )
-                aVals[i][col] = getPotentialValues( matrix, i, col );
+            if(aVals[i][col] != null)
+                aVals[i][col] = getPotentialValues(matrix, i, col);
         }
         
         // Update square...
@@ -368,18 +361,17 @@ public class Grid
         int baseRow = row - (row%3);
         int baseCol = col - (col%3);
         
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int rowOff = i / 3;        
             int colOff = i % 3;
             
             // Check the cell was INITIALLY unassigned
-            if( aVals[baseRow+rowOff][baseCol+colOff] != null )
-                aVals[baseRow+rowOff][baseCol+colOff] = getPotentialValues( matrix, baseRow+rowOff, baseCol+colOff );
+            if(aVals[baseRow+rowOff][baseCol+colOff] != null)
+                aVals[baseRow+rowOff][baseCol+colOff] = getPotentialValues(matrix, baseRow+rowOff, baseCol+colOff);
         }
     }
     
-    /*
+    /**
      * This method will check if this Grid's assignment is complete. Assignment
      * in a CSP is defined to be complete if every variable is mentioned.
      * In the case of a Sudoku grid, the grid is complete if every cell has a
@@ -387,8 +379,7 @@ public class Grid
      * Note that this method only checks for completeness of assignment -- it is
      * not concerned with any consistency checking.
      */
-    public boolean isComplete()
-    {
+    public boolean isComplete() {
         return numAssigned == 81;
     }
     
@@ -403,31 +394,30 @@ public class Grid
      * Sudoku grid are such that it cannot possibly lead to a solution.
      * (false is returned if any of the domains are empty, true otherwise)
      * This is part of the forward checking process.
+     *
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @return True if all unassigned cells that depend on this one have at least one assignable value.
      */
-    public boolean allDependentsHaveLegalDomains( int row, int col )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
+    public boolean allDependantsHaveLegalDomains(int row, int col) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
         
         
         /* Check the domains for cells in the same row */ 
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check if cell is unassigned
-            if( matrix[row][i] == BLANK_CELL )
-            {
-                if( aVals[row][i].isEmpty() )
+            if(matrix[row][i] == BLANK_CELL) {
+                if(aVals[row][i].isEmpty())
                     return false;
             }
         }
         
         /* Check the domains for cells in the same column */ 
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             // Check if cell is unassigned
-            if( matrix[i][col] == BLANK_CELL )
-            {
-                if( aVals[i][col].isEmpty() )
+            if(matrix[i][col] == BLANK_CELL) {
+                if(aVals[i][col].isEmpty())
                     return false;
             }
         }
@@ -437,15 +427,13 @@ public class Grid
         int baseRow = row - (row%3);
         int baseCol = col - (col%3);
         
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int rowOff = i / 3;        
             int colOff = i % 3;
             
             // Check if cell is unassigned
-            if( matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL )
-            {
-                if( aVals[baseRow+rowOff][baseCol+colOff].isEmpty() )
+            if(matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL) {
+                if(aVals[baseRow+rowOff][baseCol+colOff].isEmpty())
                     return false;
             }
         }
@@ -466,11 +454,15 @@ public class Grid
      * counted twice. It also makes sure that the domain of the
      * given cell (the cell given in the method input) is NOT
      * counted either.
+     *
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @param val Sudoku value to check.
+     * @return Number of choices that would be ruled out by the proposed assignment.
      */
-    private int countChoicesRuledOut( int row, int col, int val )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
+    private int countChoicesRuledOut(int row, int col, int val) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
         
         
         int count = 0;
@@ -487,48 +479,39 @@ public class Grid
         
         /* Iteration over cells... */
         // Iterate over the cells in the row that precede the square
-        for( int i=0; i < sqTLCol; i++ )
-        {
-            if( matrix[row][i] == BLANK_CELL )
-            {
-                if( aVals[row][i].contains( val ) )
+        for(int i=0; i < sqTLCol; i++) {
+            if(matrix[row][i] == BLANK_CELL) {
+                if(aVals[row][i].contains(val))
                     count++;
             }
         }
 
         // Iterate over the cells in the row that succeed the square
-        for( int i=sqBRCol+1; i < 9; i++ )
-        {
-            if( matrix[row][i] == BLANK_CELL )
-            {
-                if( aVals[row][i].contains( val ) )
+        for(int i=sqBRCol+1; i < 9; i++) {
+            if(matrix[row][i] == BLANK_CELL) {
+                if(aVals[row][i].contains(val))
                     count++;
             }
         }
         
         // Iterate over the cells in the column that precede the square
-        for( int i=0; i < sqTLRow; i++ )
-        {
-            if( matrix[i][col] == BLANK_CELL )
-            {
-                if( aVals[i][col].contains( val ) )
+        for(int i=0; i < sqTLRow; i++) {
+            if(matrix[i][col] == BLANK_CELL) {
+                if(aVals[i][col].contains(val))
                     count++;
             }
         }
         
         // Iterate over the cells in the column that succeed the square
-        for( int i=sqBRRow+1; i < 9; i++ )
-        {
-            if( matrix[i][col] == BLANK_CELL )
-            {
-                if( aVals[i][col].contains( val ) )
+        for(int i=sqBRRow+1; i < 9; i++) {
+            if(matrix[i][col] == BLANK_CELL) {
+                if(aVals[i][col].contains(val))
                     count++;
             }
         }
         
         // Iterate over all the cells in the square (except for the same cell)
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int rowOffset = i / 3;        
             int colOffset = i % 3;
             
@@ -537,11 +520,9 @@ public class Grid
             
             // Check that the cell in the square isn't the one given by the 
             // method
-            if( !( (sqRow == row) && (sqCol == col) ) )
-            {
-                if( matrix[sqRow][sqCol] == BLANK_CELL )
-                {
-                    if( aVals[sqRow][sqCol].contains( val ) )
+            if( !( (sqRow == row) && (sqCol == col) ) ) {
+                if(matrix[sqRow][sqCol] == BLANK_CELL) {
+                    if(aVals[sqRow][sqCol].contains(val))
                         count++;
                 }
             }
@@ -554,34 +535,32 @@ public class Grid
      * This method will create a ValueSet containing each value that can be
      * legally assigned to the given cell in the given matrix (2D array)
      * representation of a Sudoku.
+     * 
+     * @param matrix Two-dimensional integer matrix representing a Sudoku grid.
+     * @param row Row index; indexed from 0.
+     * @param col Column index; indexed from 0.
+     * @return Values that are legally assignable to the specified cell.
      */
-    private static ValueSet getPotentialValues( int[][] matrix, int row, int col )
-    {
-        assert (row >= 0) && ( row <= 8 );
-        assert (col >= 0) && ( col <= 8 );
+    private static ValueSet getPotentialValues(int[][] matrix, int row, int col) {
+        assert (row >= 0) && (row <= 8);
+        assert (col >= 0) && (col <= 8);
         assert matrix.length == 9;
         assert matrix[0].length == 9;
         
-        
         int[] count = new int[9];
         
-        
         /* Count existing values in the row */ 
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int val = matrix[row][i];
-            if( val != BLANK_CELL )
-            {
+            if(val != BLANK_CELL) {
                 count[val-1]++;
             }
         }
         
         /* Count existing values in the column */ 
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int val = matrix[i][col];
-            if( val != BLANK_CELL )
-            {
+            if(val != BLANK_CELL) {
                 count[val-1]++;
             }
         }
@@ -591,14 +570,12 @@ public class Grid
         int baseRow = row - (row%3);
         int baseCol = col - (col%3);
         
-        for( int i=0; i < 9; i++ )
-        {
+        for(int i=0; i < 9; i++) {
             int rowOff = i / 3;        
             int colOff = i % 3;
             
             int val = matrix[baseRow+rowOff][baseCol+colOff];
-            if( val != BLANK_CELL )
-            {
+            if(val != BLANK_CELL) {
                 count[val-1]++;
             }
         }
@@ -606,10 +583,9 @@ public class Grid
         /* Finally, determine the potential values */
         ValueSet set = new ValueSet();
         
-        for( int i=0; i < 9; i++ )
-        {
-            if( count[i] == 0 )
-                set.add( new Integer(i+1) );
+        for(int i=0; i < 9; i++) {
+            if(count[i] == 0)
+                set.add(new Integer(i+1));
         }
         
         return set;

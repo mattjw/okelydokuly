@@ -30,12 +30,10 @@ public class ArgParse {
         "\n" +
         "Options:\n" + 
         "  --help    Display this help prompt.\n";
-
     private static final String HELP_FLAG = "--help";
 
     /**
-     * Represents the arguments for the command line tool, and information on 
-     * the attempt to parse the arguments.
+     * Represents argument parsed for the command line tool.
      */
     public static class Arguments {
         public final File sudokuIn;
@@ -60,6 +58,7 @@ public class ArgParse {
      *
      * File paths are not validated by this method.
      *
+     * @param args Arguments passed from the command line.
      * @return The parsed command line arguments.
      * @exception IllegalArgumentException For invalid arguments.
      */

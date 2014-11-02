@@ -14,9 +14,11 @@ package net.mattjw.okelydokuly;
  */
 public class UnsolvedSudokuException extends RuntimeException {
 
-    /*
+    /**
      * Construct an `UnsolvedSudokuException` instance with a given
      * message.
+     *
+     * @param msg Error message.
      */
     public UnsolvedSudokuException(String msg) {
         super(msg);

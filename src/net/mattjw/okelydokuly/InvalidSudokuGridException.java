@@ -17,6 +17,8 @@ public class InvalidSudokuGridException extends RuntimeException {
     /**
      * Construct an `InvalidSudokuGridException` instance with a given
      * message.
+     *
+     * @param msg Error message.
      */
     public InvalidSudokuGridException(String msg) {
         super(msg);

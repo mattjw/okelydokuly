@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 
-/*
+/**
  * This class tracks the possible remaining values a particular Sudoku cell may
  * be assigned with; i.e., in CSP parlance, this is the domain of a cell.
  *
@@ -34,52 +34,38 @@ public class ValueSet implements Iterable<Integer>
 {
     private Set<Integer> set;
     
-    public ValueSet()
-    {
+    public ValueSet() {
         set = new HashSet<Integer>();
     }
     
-    public boolean add( int val ) 
-    {
-        Integer valObj = new Integer( val );
-        return set.add( valObj );
+    public boolean add(int val) {
+        Integer valObj = new Integer(val);
+        return set.add(valObj);
     }
     
-    
-    public boolean remove( int val )
-    {
-        Integer valObj = new Integer( val );
-        return set.remove( valObj );
+    public boolean remove(int val) {
+        Integer valObj = new Integer(val);
+        return set.remove(valObj);
     }
     
-    
-    public int size()
-    {
+    public int size() {
         return set.size();
     }
     
-    
-    public boolean contains( int val )
-    {
-        Integer valObj = new Integer( val );
-        return set.contains( valObj );
+    public boolean contains(int val) {
+        Integer valObj = new Integer(val);
+        return set.contains(valObj);
     }
     
-    
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return set.isEmpty();
     }
     
-    
-    public Iterator<Integer> iterator()
-    {
+    public Iterator<Integer> iterator() {
         return set.iterator();
     }
     
-    
-    public String toString()
-    {
+    public String toString() {
         return set.toString();
     }
 }
