@@ -5,7 +5,7 @@
 #
 # Params
 dest=bin
-appsrc=src/net/mattjw/okelydokuley/*.java
+appsrc=src/net/mattjw/okelydokuly/*.java
 
 #
 # Ensure build destination exists, and clean it

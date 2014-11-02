@@ -4,13 +4,13 @@
 #
 # Params
 classroot=bin
-appclass=net.mattjw.okelydokuley.Solver
+appclass=net.mattjw.okelydokuly.Solver
 
 egdir=examples
 
 #
 # Run examples
-java -cp $classroot $appclass $egdir/sd_ex1.csv
-java -cp $classroot $appclass $egdir/sd_ex2.csv
-java -cp $classroot $appclass $egdir/sd_ex3.csv
-java -cp $classroot $appclass $egdir/sd_ex4.csv
+java -cp $classroot $appclass $egdir/sd_ex1.csv && echo
+java -cp $classroot $appclass $egdir/sd_ex2.csv && echo
+java -cp $classroot $appclass $egdir/sd_ex3.csv && echo
+java -cp $classroot $appclass $egdir/sd_ex4.csv && echo

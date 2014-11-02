@@ -6,7 +6,7 @@
  * License:  MIT License
  */
 
-package net.mattjw.okelydokuley;
+package net.mattjw.okelydokuly;
 
 import java.util.Iterator;
 import java.util.Set;

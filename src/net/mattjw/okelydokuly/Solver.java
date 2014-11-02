@@ -6,10 +6,11 @@
  * License:  MIT License
  */
 
-package net.mattjw.okelydokuley;
+package net.mattjw.okelydokuly;
 
-import java.util.*;
-import java.io.*;
+import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /*
  * This class has two purposes:
@@ -64,9 +65,6 @@ public class Solver
         return null;
     }
     
-    
-    
-    
     public static void main( String[] args )
     {
         /* Brief input checking */
@@ -85,14 +83,14 @@ public class Solver
         try
         {
             File f = new File( args[0] );
-            Grid g = Grid.parseGrid( f );
+            Grid g = SudokuIO.parseGrid( f );
             
             Grid result = backtrackingSearch( g );
             
             if( result == null )
                 System.out.println( "A solution to this Sudoku does not exist!" );
             else
-                System.out.println( result.toOutputFormat() );
+                System.out.println( result );
         }
         catch( FileNotFoundException ex )
         {

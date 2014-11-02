@@ -30,8 +30,7 @@ includes a discussion of modelling Sudoku as a CSP.
 
 For anyone wishing to build on this codebase, inline documentation has been written with Javadoc. See `doc` directory for the typet HTML documentation.
 
-solvedoku
+Code written following Google's [Java style guide](http://google-styleguide.googlecode.com/svn/trunk/javaguide.html).
 
-okiedoie
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

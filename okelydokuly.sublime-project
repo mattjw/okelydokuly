@@ -1,0 +1,23 @@
+{
+    "folders":
+    [
+        {
+            "path": "src"
+        }
+    ],
+    "settings": {
+        "SublimeLinter":
+        {
+            "Java":
+            {
+                "lint_args":
+                [
+                    "-sourcepath", "src",
+                    "-classpath", "bin",
+                    "-Xlint", "-Xlint:-serial",
+                    "{filename}"
+                ]
+            }
+        }
+    }
+}

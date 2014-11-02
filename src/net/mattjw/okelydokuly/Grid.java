@@ -6,7 +6,7 @@
  * License:  MIT License
  */
 
-package net.mattjw.okelydokuley;
+package net.mattjw.okelydokuly;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,11 +14,11 @@ import java.util.Vector;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Collections;
-//import java.util.*;
 
 /*
- * This class represents a Sudoku grid and also handles a lot of the CSP operations
- * (such as assignment) that relate to the Sudoku grid.
+ * This class represents a Sudoku grid throughout the solving process; i.e.,
+ * from unsolved, to partially solved, to solved. It implements many of the CSP
+ * operations (such as assignment) that relate to the Sudoku grid.
  * Also, changes to a Sudoku grid as part of the solving process (e.g. due to
  * assignment) are managed and represented by this class.
  *
@@ -43,15 +43,12 @@ public class Grid
                                  // grid (this allows for more efficient
                                  // checking of whether the grid is complete)
     
-    
-    
-    
     /*
      * Construct a Sudoku grid object from a 2 dimensional array of integers.
      * -1 is used to indicate an empty cell in the Sudoku.
      *
-     * Note that this will not check to see if the 2 dimensional array representation
-     * of the Sudoku is valid..
+     * Note that this will not check to see if the 2 dimensional array 
+     * representation of the Sudoku is valid.
      * It is assumed that the input array is:
      *  - of the correct size
      *  - a valid Sudoku grid (i.e. meets the constraints of Sudoku grids)
@@ -85,21 +82,50 @@ public class Grid
             }
         }
     }
+
+    /* 
+     * Returns a string representation of the Sudoku grid.
+     * This follows the 9 row by 9 column comma-separated format, with the
+     * exception that blank cells (if present) are represented by underscores.
+     */
+    public String toString()
+    {
+        StringBuffer buff = new StringBuffer();
+        
+        for( int row=0; row < matrix.length; row++ )
+        {
+            for( int col=0; col < matrix[row].length; col++ )
+            {
+                if( matrix[row][col] == -1 )
+                    buff.append( "_" );
+                else
+                    buff.append( matrix[row][col] );
+                if( col < (matrix[row].length-1) )
+                    buff.append(",");
+            }
+            
+            // Only insert newlines BETWEEN rows
+            if( row < (matrix.length-1) )
+                buff.append( "\n" );
+        }
+        
+        return buff.toString();
+    }
     
-    
-    
-    
-    /* ********** METHODS RELATED TO THE CSP AND SOLVING THE SUDOKU ********** */
+    /*
+     * ********** CSP SOLVER METHODS **********
+     */
     
     /*
      * This method will choose an unassigned cell in the Sudoku grid.
-     * It returns a two element array. The first element is the row number of the
-     * located cell, the second element is the column number of the located cell.
+     * It returns a two element array. The first element is the row number of 
+     * the located cell, the second element is the column number of the located 
+     * cell.
      *
-     * The process of deciding the cell is based on the 'most constrained variable'
-     * heuristic. This means that the chosen cell is the one which has the fewest 
-     * potential values (i.e. the fewest number of values in the ValueSet (i.e. 
-     * the domain for the cell)).
+     * The process of deciding the cell is based on the 'most constrained 
+     * variable' heuristic. This means that the chosen cell is the one which has
+     * the fewest potential values (i.e. the fewest number of values in the 
+     * ValueSet (i.e. the domain for the cell)).
      *
      * It is assumed that the gird is not complete when this method is called.
      */
@@ -140,7 +166,6 @@ public class Grid
         
         return new int[] { bestRow, bestCol };
     }
-    
     
     /*
      * This method will return a list of the possible values that the given cell
@@ -192,7 +217,6 @@ public class Grid
         
         return valList; 
     }
-    
     
     /*
      * This method will assign an unassigned cell will the given value.
@@ -254,7 +278,6 @@ public class Grid
         }
     }
     
-    
     /*
      * This method will unassign an assigned cell.
      * After carrying this out, the method also handles updating the ValueSets
@@ -265,12 +288,13 @@ public class Grid
      * assignment, we need to return the grid to the state it was before the
      * assignment was made.
      *
-     * It assumed that the cell this method works on is one that has been previously
-     * assigned by the assignCell() method. In other words, the method should
-     * NOT be used to unassign a value that was given in the initial Sudoku grid.
+     * It assumed that the cell this method works on is one that has been 
+     * previously assigned by the assignCell() method. In other words, the 
+     * method should NOT be used to unassign a value that was given in the 
+     * initial Sudoku grid.
      *
-     * Finally, this method will also update the assignedCount (this is important
-     * for the isComplete() method).
+     * Finally, this method will also update the assignedCount (this is 
+     * important for the isComplete() method).
      */
     public void unassignCell( int row, int col )
     {
@@ -322,7 +346,6 @@ public class Grid
         }
     }
     
-    
     /*
      * This method will check if this Grid's assignment is complete. Assignment
      * in a CSP is defined to be complete if every variable is mentioned.
@@ -335,7 +358,6 @@ public class Grid
     {
         return numAssigned == 81;
     }
-    
     
     /*
      * This method will look at each unassigned cell that is affected by
@@ -398,16 +420,14 @@ public class Grid
         return true;
     }
     
-    
-    
-    
     /*
      * This method will count the number of times the given value
      * appears in the domains of the unassigned cells that are
      * dependent on the given cell.
      * This value is equivalent to the number of choices in other 
      * unassigned cells that get ruled out due to the assignment of 
-     * the given value (this is necessary for the least-constraining-value heuristic).
+     * the given value (this is necessary for the least-constraining-value 
+     * heuristic).
      *
      * The method is careful to ensure that the same cell is not
      * counted twice. It also makes sure that the domain of the
@@ -482,7 +502,8 @@ public class Grid
             int sqRow = sqTLRow + rowOffset;
             int sqCol = sqTLCol + colOffset;
             
-            // Check that the cell in the square isn't the one given by the method
+            // Check that the cell in the square isn't the one given by the 
+            // method
             if( !( (sqRow == row) && (sqCol == col) ) )
             {
                 if( matrix[sqRow][sqCol] == -1 )
@@ -495,7 +516,6 @@ public class Grid
         
         return count;
     }
-    
     
     /*
      * This method will create a ValueSet containing each value that can be
@@ -550,7 +570,6 @@ public class Grid
             }
         }
         
-        
         /* Finally, determine the potential values */
         ValueSet set = new ValueSet();
         
@@ -561,121 +580,6 @@ public class Grid
         }
         
         return set;
-    }
-    
-    
-    
-    
-    /* ********** OTHER METHODS (NOT TO DO WITH SOLVING) ********** */
-    
-    /*
-     * This method will parse a file containing an ASCII representation of a Sudoku
-     * grid as a Grid object.
-     *
-     * Note that this performs little (if any) error checking of the input ASCII 
-     * file's content. It is assumed that the file is a correct representation
-     * of the Sudoku grid.
-     */
-    public static Grid parseGrid( File f ) throws FileNotFoundException
-    {
-        Scanner in = new Scanner( f );
-
-        int[][] m = new int[9][];
-        
-        for( int row=0; row < 9; row++ )
-        {
-            String str = in.next();
-            int[] mRow = new int[9];
-            
-            for( int col=0; col < 9; col++ )
-            {
-                char c = str.charAt( col );
-                
-                if( c == '_' )
-                    mRow[col] = -1;
-                else
-                {
-                    if( !Character.isDigit( c ) )
-                        throw new RuntimeException( "Cell entry " + c + " is not an integer" );
-                    int val = Integer.parseInt( new Character(c).toString() );
-                    
-                    if( (val < 1) || (val > 9) )
-                        throw new RuntimeException( "A cell entry should either be an integer between 1 and 9 or a _" );
-                    mRow[col] = val;
-                }
-            }
-            
-            m[row] = mRow;
-        }         
-        
-        
-        return new Grid( m );
-    }
-    
-    
-    /*
-     * This will return the grid converted to CSV plain text format.
-     */
-    public String toOutputFormat()
-    {
-        StringBuffer buff = new StringBuffer();
-        
-        for( int row=0; row < matrix.length; row++ )
-        {
-            for( int col=0; col < matrix[row].length; col++ )
-            {
-                if( matrix[row][col] == -1 )
-                    buff.append( "_" );
-                else
-                    buff.append( matrix[row][col] );
-            }
-            
-            // Only insert newlines BETWEEN rows
-            if( row < (matrix.length-1) )
-                buff.append( "\n" );
-        }
-        
-        return buff.toString();
-    }
-    
-    
-    /* 
-     * Returns a string representation of the Sudoku grid (intended to be
-     * displayed via the command line).
-     * The representation is prettied up to make it easier to read. This is 
-     * simply to aid development of the Sudoku solver.
-     */
-    public String toString()
-    {
-        StringBuffer buff = new StringBuffer();
-        String horizDivider = " --------- --------- --------- ";
-
-        for( int row=0; row < matrix.length; row++ )
-        {
-            if( (row % 3) == 0 )
-                buff.append( horizDivider + "\n" );
-            
-            for( int col=0; col < matrix[row].length; col++ )
-            {
-                if( (col % 3) == 0 )
-                    buff.append( "|" );
-                
-                buff.append( " " );
-
-                if( matrix[row][col] == -1 )
-                    buff.append( "_" );
-                else
-                    buff.append( matrix[row][col] );
-                
-                buff.append( " " );
-            }
-            
-            buff.append( "|\n" );
-        }
-        
-        buff.append( horizDivider );
-        
-        return buff.toString();
     }
 }
 
