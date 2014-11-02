@@ -83,7 +83,7 @@ public class Solver
         try
         {
             File f = new File( args[0] );
-            Grid g = SudokuIO.parseGrid( f );
+            Grid g = SudokuIO.parseSudokuFile( f );
             
             Grid result = backtrackingSearch( g );
             

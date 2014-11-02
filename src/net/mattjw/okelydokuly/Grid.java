@@ -22,10 +22,15 @@ import java.util.Collections;
  * Also, changes to a Sudoku grid as part of the solving process (e.g. due to
  * assignment) are managed and represented by this class.
  *
- * Note that this is coded specifically to 9x9 Sudoku grids.
+ * Note that this is implemented specifically for 9x9 Sudoku grids.
  */
 public class Grid
-{
+{   
+    /*
+     * The integer value used to represent a blank cell.
+     */
+    public static final int BLANK_CELL = -1;
+
     private int[][] matrix;    // Internal representation of a Sudoku grid
     
     private ValueSet[][] aVals;   // Each entry in this 2D array is a set 
@@ -75,7 +80,7 @@ public class Grid
             for( int col=0; col < 9; col++ )
             {
                 // Check if the cell is a blank (unassigned) cell
-                if( matrix[row][col] == -1 )
+                if( matrix[row][col] == BLANK_CELL )
                     aVals[row][col] = getPotentialValues( matrix, row, col );
                 else
                     numAssigned++;
@@ -96,7 +101,7 @@ public class Grid
         {
             for( int col=0; col < matrix[row].length; col++ )
             {
-                if( matrix[row][col] == -1 )
+                if( matrix[row][col] == BLANK_CELL )
                     buff.append( "_" );
                 else
                     buff.append( matrix[row][col] );
@@ -110,6 +115,15 @@ public class Grid
         }
         
         return buff.toString();
+    }
+
+    /*
+     * Get the value of a particular cell.
+     * 
+     * `row` and `col` are indexed from 0.
+     */
+    public int getCell(int row, int col) {
+        return matrix[row][col];
     }
     
     /*
@@ -146,7 +160,7 @@ public class Grid
             for( int col=0; col < 9; col++ )
             {
                 // Check if we have an unassigned cell
-                if( matrix[row][col] == -1 )
+                if( matrix[row][col] == BLANK_CELL )
                 {
                     int numChoices = aVals[row][col].size();
                     if( numChoices < bestNumChoices )
@@ -182,7 +196,7 @@ public class Grid
     {
         assert (row >= 0) && ( row <= 8 );
         assert (col >= 0) && ( col <= 8 );
-        assert matrix[row][col] == -1;
+        assert matrix[row][col] == BLANK_CELL;
         
         
         // We need to construct a list of values that is sorted in order of how
@@ -236,7 +250,7 @@ public class Grid
         assert (row >= 0) && ( row <= 8 );
         assert (col >= 0) && ( col <= 8 );
         assert (val >= 1) && ( val <= 9 );
-        assert matrix[row][col] == -1 : "Only an unassigned cell may be assigned a value";
+        assert matrix[row][col] == BLANK_CELL : "Only an unassigned cell may be assigned a value";
         assert aVals[row][col].contains( val ) : "A cell may only be assigned with a value that is in its set of potential values" ;
         
         
@@ -250,7 +264,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             // Check the cell is unassigned
-            if( matrix[row][i] == -1 )
+            if( matrix[row][i] == BLANK_CELL )
                 aVals[row][i].remove( val );
         }
         
@@ -258,7 +272,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             // Check the cell is unassigned
-            if( matrix[i][col] == -1 )
+            if( matrix[i][col] == BLANK_CELL )
                 aVals[i][col].remove( val );
         }
         
@@ -273,7 +287,7 @@ public class Grid
             int colOff = i % 3;
             
             // Check the cell is unassigned
-            if( matrix[baseRow+rowOff][baseCol+colOff] == -1 )
+            if( matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL )
                 aVals[baseRow+rowOff][baseCol+colOff].remove( val );
         }
     }
@@ -300,13 +314,13 @@ public class Grid
     {
         assert (row >= 0) && ( row <= 8 );
         assert (col >= 0) && ( col <= 8 );
-        assert matrix[row][col] != -1 : "Only non-blank cells can be unassigned";
+        assert matrix[row][col] != BLANK_CELL : "Only non-blank cells can be unassigned";
         assert aVals[row][col] != null : "Only cells that were unassigned in the initial grid may be unassigned";
         
         
         /* Carry out unassignment */
         int val = matrix[row][col];
-        matrix[row][col] = -1;
+        matrix[row][col] = BLANK_CELL;
         numAssigned--;
         
         
@@ -381,7 +395,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             // Check if cell is unassigned
-            if( matrix[row][i] == -1 )
+            if( matrix[row][i] == BLANK_CELL )
             {
                 if( aVals[row][i].isEmpty() )
                     return false;
@@ -392,7 +406,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             // Check if cell is unassigned
-            if( matrix[i][col] == -1 )
+            if( matrix[i][col] == BLANK_CELL )
             {
                 if( aVals[i][col].isEmpty() )
                     return false;
@@ -410,7 +424,7 @@ public class Grid
             int colOff = i % 3;
             
             // Check if cell is unassigned
-            if( matrix[baseRow+rowOff][baseCol+colOff] == -1 )
+            if( matrix[baseRow+rowOff][baseCol+colOff] == BLANK_CELL )
             {
                 if( aVals[baseRow+rowOff][baseCol+colOff].isEmpty() )
                     return false;
@@ -456,7 +470,7 @@ public class Grid
         // Iterate over the cells in the row that precede the square
         for( int i=0; i < sqTLCol; i++ )
         {
-            if( matrix[row][i] == -1 )
+            if( matrix[row][i] == BLANK_CELL )
             {
                 if( aVals[row][i].contains( val ) )
                     count++;
@@ -466,7 +480,7 @@ public class Grid
         // Iterate over the cells in the row that succeed the square
         for( int i=sqBRCol+1; i < 9; i++ )
         {
-            if( matrix[row][i] == -1 )
+            if( matrix[row][i] == BLANK_CELL )
             {
                 if( aVals[row][i].contains( val ) )
                     count++;
@@ -476,7 +490,7 @@ public class Grid
         // Iterate over the cells in the column that precede the square
         for( int i=0; i < sqTLRow; i++ )
         {
-            if( matrix[i][col] == -1 )
+            if( matrix[i][col] == BLANK_CELL )
             {
                 if( aVals[i][col].contains( val ) )
                     count++;
@@ -486,7 +500,7 @@ public class Grid
         // Iterate over the cells in the column that succeed the square
         for( int i=sqBRRow+1; i < 9; i++ )
         {
-            if( matrix[i][col] == -1 )
+            if( matrix[i][col] == BLANK_CELL )
             {
                 if( aVals[i][col].contains( val ) )
                     count++;
@@ -506,7 +520,7 @@ public class Grid
             // method
             if( !( (sqRow == row) && (sqCol == col) ) )
             {
-                if( matrix[sqRow][sqCol] == -1 )
+                if( matrix[sqRow][sqCol] == BLANK_CELL )
                 {
                     if( aVals[sqRow][sqCol].contains( val ) )
                         count++;
@@ -537,7 +551,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             int val = matrix[row][i];
-            if( val != -1 )
+            if( val != BLANK_CELL )
             {
                 count[val-1]++;
             }
@@ -547,7 +561,7 @@ public class Grid
         for( int i=0; i < 9; i++ )
         {
             int val = matrix[i][col];
-            if( val != -1 )
+            if( val != BLANK_CELL )
             {
                 count[val-1]++;
             }
@@ -564,7 +578,7 @@ public class Grid
             int colOff = i % 3;
             
             int val = matrix[baseRow+rowOff][baseCol+colOff];
-            if( val != -1 )
+            if( val != BLANK_CELL )
             {
                 count[val-1]++;
             }

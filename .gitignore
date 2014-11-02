@@ -1,5 +1,6 @@
 ### Project-specific ###
 _misc
+src/**/*.class
 
 ### OSX ###
 .DS_Store

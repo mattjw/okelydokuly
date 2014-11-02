@@ -5,19 +5,40 @@ OkelyDokuly is a command-line Sudoku puzzle solver written in Java.
 
 ## Usage
 
-Sudoku format:
+Quickstart. Get started right away, use the precompiled classes (see). To get it running...
 
-## Example puzzles
+```
+bla
+```
+
+Sudoku file format should be... blaaa.
+
+For installation, features, etc., please read below.
+
+
+### Build
+
+Build guide.
+
+### Example puzzles
 
 A selection of example Sudoku puzzles can be found in the `examples` directory. Files named `sd_ex*.csv` are valid (but incomplete) puzzles. 
 
 Files named `sd_bad*.csv` are unsolvable in some way, either because they are unsatisfiable (ambiguous assignments) or because the grid does not meet the constraints of a valid Sudoku puzzle. These are included for testing purposes.
 
+### Features
+
+More discussion on features.
+
+Any number of lines of whitespace are permitted after the grid.
+
+Grids with non-unique solutions will still be solved.
+
 ## Design
 
 -
 
-## How it works
+### How the solver works
 
 Represented as a Constraint Satisfaction Problem (CSP) and solved using 
 backtracking search with forwarding checking and constraint propagation. 
