@@ -10,8 +10,8 @@ appsrc=src/net/mattjw/okelydokuly/*.java
 #
 # Ensure build destination exists, and clean it
 echo "cleaning..."
-mkdir -p $dest
-rm -rf $dest/*
+rm -ri ./$dest
+mkdir -p ./$dest
 
 #
 # Compile

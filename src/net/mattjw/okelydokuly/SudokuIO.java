@@ -12,13 +12,22 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /*
  * Input and output of Sudoku grids.
  */
-public class SudokuIO
-{
-    public static final char BLANK_CELL_CHAR = '_';
+public class SudokuIO {
+    /*
+     * Character used in the plain text files to represent the blank cell.
+     */
+    private static final char BLANK_CELL_CHAR = '0';
+
+    /*
+     * Delimiter used in the text files; i.e., a comma.
+     */
+    private static final char CELL_DELIM = ',';
 
     /*
      * This method will parse a plain text file containing a 9x9 
@@ -28,14 +37,12 @@ public class SudokuIO
      * file's content. It is assumed that the file is a correct representation
      * of the Sudoku grid.
      */
-    public static Grid parseSudokuFile( File f ) throws FileNotFoundException
-    {
+    public static Grid parseSudokuFile( File f ) throws FileNotFoundException {
         Scanner in = new Scanner( f );
 
         int[][] m = new int[9][];
         
-        for( int row=0; row < 9; row++ )
-        {
+        for( int row=0; row < 9; row++ ) {
             // Validation: ensure next row
             if( !in.hasNext() )
                 throw new InvalidSudokuFileException( String.format("Insufficient rows. File contained only %d rows.", row) );
@@ -44,10 +51,9 @@ public class SudokuIO
             String str = in.next();
             int[] mRow = new int[9];
 
-            StringTokenizer tokens = new StringTokenizer(str, ",");
+            StringTokenizer tokens = new StringTokenizer(str, new Character(CELL_DELIM).toString());
             
-            for( int col=0; col < 9; col++ )
-            {
+            for( int col=0; col < 9; col++ ) {
                 // Validation: ensure next cell
                 if( !tokens.hasMoreTokens() )
                     throw new InvalidSudokuFileException( String.format("Insufficient cells. Row %d only contained %d cells.", row+1, col) );
@@ -65,8 +71,7 @@ public class SudokuIO
                 
                 if( c == BLANK_CELL_CHAR )
                     mRow[col] = -1;
-                else
-                {
+                else {
                     if( !Character.isDigit( c ) )
                         throw new InvalidSudokuFileException( String.format("Cell entry '%s' is not an integer.", c) );
                     int val = Integer.parseInt( new Character(c).toString() );
@@ -94,14 +99,38 @@ public class SudokuIO
         return new Grid( m );
     }
     
-    /*
+    /**
      * This will write a grid to file in the 9x9 comma separated format.
+     * 
+     * @exception FileNotFoundException Problem initialising output file.
+     * @exception IOException Problem while writing to file.
      */
-    public static String writeSudokuFile(Grid grid, File f)
-    {
-        //int[][] matrix = grid.matrix();
-        // to do
-        return null;
+    public static void writeSudokuFile(Grid grid, File f) throws FileNotFoundException, IOException {
+        PrintWriter wrtr = new PrintWriter(f);
+        
+        for(int row=0; row < 9; row++) {
+            for(int col=0; col < 9; col++) {
+                int cell = grid.getCellAt(row, col);
+
+                if(cell==grid.BLANK_CELL)
+                    wrtr.print(BLANK_CELL_CHAR);
+                else
+                    wrtr.print(cell);
+
+                if(col < 8)
+                    wrtr.print(CELL_DELIM);
+            }
+            if(row < 8)
+                wrtr.println();
+        }
+
+        // PrintWriter squelches write errors. Let's make them explicit
+        if(wrtr.checkError()) {
+            wrtr.close();
+            throw new IOException("Error while writing to output file.");
+        }
+
+        wrtr.close();
     }
 }
 

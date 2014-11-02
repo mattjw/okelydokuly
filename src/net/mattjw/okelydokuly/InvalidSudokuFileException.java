@@ -8,12 +8,12 @@
 
 package net.mattjw.okelydokuly;
 
-/* 
+/**
  * Exception thrown if a Sudoku file has an invalid format.
  */
 public class InvalidSudokuFileException extends RuntimeException {
 
-    /*
+    /**
      * Construct an `InvalidSudokuFileException` instance with a given
      * message.
      */

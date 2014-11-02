@@ -11,6 +11,8 @@ package net.mattjw.okelydokuly;
 import java.util.List;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import net.mattjw.okelydokuly.ArgParse.Arguments;
 
 /*
  * This class has two purposes:
@@ -26,8 +28,11 @@ public class Solver
      * This method implements a backtracking search with forward checking algorithm
      * to solve the inputted Sudoku grid.
      * This is based on the backtracking algorithm as described in Artificial
-     * Intelligence: A Modern Approach (Russel, S. and Norvig, P. pp. 142).
-     * null is return to indicate failure to solve a puzzle.
+     * Intelligence: A Modern Approach (Russell and Norvig).
+     *
+     * null is returned to indicate failure to solve a puzzle.
+     * null is also used during recusrive backtracking to indicate a particular
+     * branch of the search space is unsolveable.
      */
     public static Grid backtrackingSearch( Grid grid )
     {
@@ -64,37 +69,99 @@ public class Solver
         
         return null;
     }
+
+    private static final int RETCODE_OK = 0;
+    private static final int RETCODE_ARGPARSE = 1;
+    private static final int RETCODE_FILEIO = 2;
+    private static final int RETCODE_UNSOLVED = 3;
     
-    public static void main( String[] args )
+    public static void main( String[] rawArgs )
     {
-        /* Brief input checking */
-        if( args.length < 1 )
-        {
-            System.out.println( "Missing argument - expected the filename of a Sudoku puzzle" );
-            System.exit( 0 );
-        }
-        else if( args.length > 1 )
-        {
-            System.out.println( "Too many arguments - only one argument (the filename of a Sudoku puzzle) should be given" );
-            System.exit( 0 );
-        }
-        
-        /* Solve the Sudoku puzzle */
+        //
+        // Parse arguments
+        Arguments args = null;
         try
         {
-            File f = new File( args[0] );
-            Grid g = SudokuIO.parseSudokuFile( f );
-            
-            Grid result = backtrackingSearch( g );
-            
-            if( result == null )
-                System.out.println( "A solution to this Sudoku does not exist!" );
-            else
-                System.out.println( result );
+            args = ArgParse.parse(rawArgs);
         }
-        catch( FileNotFoundException ex )
+        catch(IllegalArgumentException ex)
+        {
+            System.out.println(ex);
+            System.out.println();
+            System.out.println(ArgParse.USAGE);
+            System.exit(RETCODE_ARGPARSE);
+        }
+            
+        if(args.helpFlag)
+        {
+            System.out.println(ArgParse.USAGE);
+            System.exit(RETCODE_OK);
+        }
+
+        //
+        // Validate input and output 
+        File fIn = args.sudokuIn;
+        File fOut = args.sudokuOut;
+
+        if(!fIn.exists()) {
+            System.out.println("Could not find input file: " + fIn + ".");
+            System.exit(RETCODE_FILEIO);
+        }
+
+        if(!fIn.canRead()) {
+            System.out.println("Cannot read input file: " + fIn + ".");
+            System.exit(RETCODE_FILEIO);
+        }
+
+        if(fOut != null) {
+            if(fOut.exists() && !fOut.canWrite()) {
+                System.out.println("Cannot write to existing output file: " + fOut + ".");
+                System.exit(RETCODE_FILEIO);
+            }
+        }
+        
+        //
+        // Read sudoku
+        Grid g = null;
+        try
+        {
+            g = SudokuIO.parseSudokuFile( fIn );
+        }
+        catch(FileNotFoundException ex)
         {
             System.out.println( ex );
+            System.exit(RETCODE_FILEIO);
+        }
+        catch(InvalidSudokuGridException ex)
+        {
+            System.out.println( ex );
+            System.exit(RETCODE_FILEIO);
+        }
+
+        //
+        // Solve the puzzle
+        Grid result = backtrackingSearch( g );
+        
+        if( result == null ) {
+            System.out.println( "A solution to this Sudoku does not exist." );
+            System.exit(RETCODE_UNSOLVED);
+        }
+
+        //
+        // Output -- file or command line, as requested
+        if(fOut == null) {
+            System.out.println(result);
+            System.exit(RETCODE_OK);
+        }
+        else {
+            try {
+                SudokuIO.writeSudokuFile(result, fOut);
+                System.exit(RETCODE_OK);
+            }
+            catch(IOException ex) {
+                System.out.println(ex);
+                System.exit(RETCODE_FILEIO);
+            }
         }
     }
 }

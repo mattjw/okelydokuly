@@ -22,7 +22,8 @@ import java.util.Collections;
  * Also, changes to a Sudoku grid as part of the solving process (e.g. due to
  * assignment) are managed and represented by this class.
  *
- * Note that this is implemented specifically for 9x9 Sudoku grids.
+ * Note that this is implemented specifically for 9x9 Sudoku grids. Cells are
+ * expected to be integer values between 1 and 9.
  */
 public class Grid
 {   
@@ -50,22 +51,40 @@ public class Grid
     
     /*
      * Construct a Sudoku grid object from a 2 dimensional array of integers.
-     * -1 is used to indicate an empty cell in the Sudoku.
      *
-     * Note that this will not check to see if the 2 dimensional array 
-     * representation of the Sudoku is valid.
-     * It is assumed that the input array is:
-     *  - of the correct size
-     *  - a valid Sudoku grid (i.e. meets the constraints of Sudoku grids)
+     * -1 is used to indicate an empty cell in the Sudoku. The array is indexed
+     * row first; that is, matrix[r][c] gives an element at row `r` and column
+     * `c`.
+     *
+     * Validation is carried out to check the following:
+     *  - the array is of correct size (9x9)
+     *  - each value is either the blank value or between 1 and 9
+     *
+     * It does not check if the arrangement of values on the grid is valid for
+     * a sudoku grid, or if the grid is solvable.
      */
     public Grid( int[][] matrix )
     {
-        assert matrix.length == 9;
-        assert matrix[0].length == 9; 
-        
-        
+        /* Validate the matrix */
+        if( matrix.length != 9 )
+            throw new InvalidSudokuGridException("Grid must be 9 rows high.");
+
+        for( int row=0; row < 9; row++ ) {
+            if( matrix[row].length != 9 )
+                throw new InvalidSudokuGridException("Each row must be 9 cells wide.");
+        }
+
+        for( int row=0; row < 9; row++ )
+        {
+            for( int col=0; col < 9; col++ )
+            {
+                int cell = matrix[row][col];
+                if( !((cell == BLANK_CELL) || ( (cell >= 1) && (cell <= 9) ) ) )
+                    throw new InvalidSudokuGridException("A cell must be a blank or between 1 and 9.");
+            }
+        }
+
         this.matrix = matrix;
-        
         
         /* Set up the potential values matrix (the 2D array named aVals)
            and count the number of unassigned variables (for the purpose
@@ -122,7 +141,7 @@ public class Grid
      * 
      * `row` and `col` are indexed from 0.
      */
-    public int getCell(int row, int col) {
+    public int getCellAt(int row, int col) {
         return matrix[row][col];
     }
     
