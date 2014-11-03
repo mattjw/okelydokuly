@@ -27,9 +27,13 @@ import java.util.Collections;
  */
 public class Grid {   
     /**
-     * The integer value used to represent a blank cell.
+     * The integer value used to represent a blank cell internally.
      */
     public static final int BLANK_CELL = -1;
+
+    // Consts for string representation of a grid
+    private static final String GRID_TEXT_DELIM = ",";
+    private static final String GRID_BLANK_CELL = "0";
 
     private int[][] matrix;    // Internal representation of a Sudoku grid
     
@@ -57,13 +61,14 @@ public class Grid {
      *
      * Validation is carried out to check the following:
      *  - the array is of correct size (9x9)
-     *  - each value is either the blank value or between 1 and 9
+     *  - each value is either the blank value (indicated by -1) or between 1 
+     *    and 9
      *
      * It does not check if the arrangement of values on the grid is valid for
      * a sudoku grid, or if the grid is solvable.
      *
      * The matrix stored internally is a deep copy of the argument, ensuring
-     * that the argument matrix is unaffected by internal changes.
+     * that the argument matrix is unaffected by internal state change.
      *
      * @param matrix A two-dimensional array representing a Sudoku grid.
      */
@@ -114,7 +119,7 @@ public class Grid {
      *
      * This adheres to the 9 row by 9 column comma-separated format.
      *
-     * @return Sudoku in 9x9 comma-separated format
+     * @return the grid in 9x9 comma-separated format.
      */
     @Override
     public String toString() {
@@ -123,11 +128,11 @@ public class Grid {
         for(int row=0; row < matrix.length; row++) {
             for(int col=0; col < matrix[row].length; col++) {
                 if(matrix[row][col] == BLANK_CELL)
-                    buff.append("0");
+                    buff.append(GRID_BLANK_CELL);
                 else
                     buff.append(matrix[row][col]);
                 if(col < (matrix[row].length-1))
-                    buff.append(",");
+                    buff.append(GRID_TEXT_DELIM);
             }
             
             // Only insert newlines BETWEEN rows
@@ -147,6 +152,18 @@ public class Grid {
      */
     public int getCellAt(int row, int col) {
         return matrix[row][col];
+    }
+
+    /*
+     * Helepr method to validate row and col index arguments. Throws
+     * exception if incorrect.
+     */
+    private static void validateRowCol(int row, int col) {
+        if( !((row >= 0) && (row <= 8)) )
+            throw new IllegalArgumentException(String.format("Row %d out of range.", row));
+
+        if( !((col >= 0) && (col <= 8)) )
+            throw new IllegalArgumentException(String.format("Col %d out of range.", col));
     }
     
     /*
@@ -253,7 +270,7 @@ public class Grid {
     }
     
     /**
-     * This method will assign an unassigned cell will the given value.
+     * This method will assign an unassigned cell with the given value.
      *
      * After carrying this out, the method also handles updating the ValueSets
      * (domains) for the cells affected by this assignment. This is necessary to
@@ -267,15 +284,19 @@ public class Grid {
      *
      * @param row Row index; indexed from 0.
      * @param col Column index; indexed from 0.
-     * @param val New value for this cell.
+     * @param val New value for the cell.
      */
     public void assignCell(int row, int col, int val) {
-        assert (row >= 0) && (row <= 8);
-        assert (col >= 0) && (col <= 8);
-        assert (val >= 1) && (val <= 9);
-        assert matrix[row][col] == BLANK_CELL : "Only an unassigned cell may be assigned a value";
-        assert aVals[row][col].contains(val) : "A cell may only be assigned with a value that is in its set of potential values" ;
-        
+        validateRowCol(row, col);
+
+        if( !((val >= 1) && (val <= 9)) )
+            throw new IllegalArgumentException(String.format("Value %d out of range.", val));
+
+        if( matrix[row][col] != BLANK_CELL )
+            throw new IllegalArgumentException("Only an unassigned cell may be assigned a value.");
+
+        if(!aVals[row][col].contains(val))
+            throw new IllegalArgumentException("A cell may only be assigned with a value that is in its set of potential values.");
         
         /* Carry out the assignment */
         matrix[row][col] = val;
@@ -335,11 +356,13 @@ public class Grid {
      * @param col Column index; indexed from 0.
      */
     public void unassignCell(int row, int col) {
-        assert (row >= 0) && (row <= 8);
-        assert (col >= 0) && (col <= 8);
-        assert matrix[row][col] != BLANK_CELL : "Only non-blank cells can be unassigned";
-        assert aVals[row][col] != null : "Only cells that were unassigned in the initial grid may be unassigned";
-        
+        validateRowCol(row, col);
+
+        if(matrix[row][col] == BLANK_CELL)
+            throw new IllegalArgumentException("Only non-blank cells can be unassigned.");
+
+        if(aVals[row][col] == null)
+            throw new IllegalArgumentException("Only cells that were unassigned in the initial grid may be unassigned.");
         
         /* Carry out unassignment */
         int val = matrix[row][col];
@@ -411,9 +434,7 @@ public class Grid {
      * @return True if all unassigned cells that depend on this one have at least one assignable value.
      */
     public boolean allDependantsHaveLegalDomains(int row, int col) {
-        assert (row >= 0) && (row <= 8);
-        assert (col >= 0) && (col <= 8);
-        
+        validateRowCol(row, col);
         
         /* Check the domains for cells in the same row */ 
         for(int i=0; i < 9; i++) {

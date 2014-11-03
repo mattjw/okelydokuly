@@ -31,8 +31,8 @@ public class Solver
     private static final String SUGGEST_HELP = "Run with --help to display usage information.";
 
     /**
-     * This method implements a backtracking search with forward checking algorithm
-     * to solve the inputted Sudoku grid.
+     * This method implements a backtracking search with forward checking 
+     * algorithm to solve the inputted Sudoku grid.
      * This is based on the backtracking algorithm as described in Artificial
      * Intelligence: A Modern Approach (Russell and Norvig).
      *
@@ -166,6 +166,10 @@ public class Solver
                 SudokuIO.writeSudokuFile(result, fOut);
                 System.exit(RETCODE_OK);
             }
+            catch(FileNotFoundException ex) {
+                System.out.println("Output file error: " + ex.getMessage());
+                System.exit(RETCODE_FILEIO);
+            }
             catch(IOException ex) {
                 System.out.println(ex.getMessage());
                 System.exit(RETCODE_FILEIO);
@@ -173,3 +177,5 @@ public class Solver
         }
     }
 }
+
+

@@ -20,14 +20,13 @@ import java.util.HashSet;
  * is designed so that, externally, only integer primitives need to be handled. The
  * methods will handle turning the primitives into Integer objects and vice-versa.
  * 
- * A Set is an appropriate data structure for the purpose holding domain values
- * because:
+ * A Set is an appropriate data structure for the purpose holding domain values:
  *  - it will not store duplicate values (if an attempt to add a duplicate value
  *    is made, the Set will simply be unchanged) (similarly, attempts to remove
  *    elements that already exist are allowed (they simply have no effect)) 
  *  - there is no ordering (the order of the values is irrelevant)
  *  - it supports all the necessary operations (add, remove and contains)
- * Furthermore, the Java API's HashSet implementation guarantees constant time
+ * Furthermore, the Java API's HashSet implementation gives constant time
  * complexity for these operations.
  */
 public class ValueSet implements Iterable<Integer>

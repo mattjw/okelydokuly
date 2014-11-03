@@ -193,6 +193,23 @@ $ java net.mattjw.okelydokuly.Solver ../examples/sd_bad5.csv
 Unexpected non-blank lines at end of file.
 ```
 
+```
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_bad6.csv 
+Cell entry '_' is not an integer.
+```
+
+File I/O issues are also handled:
+
+```
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_nope.csv
+Could not find input file: ../examples/sd_nope.csv
+```
+
+```
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_ex1.csv ../examples/doesntexist/nope.csv
+Output file error: ../examples/doesntexist/nope.csv (No such file or directory)
+```
+
 
 ## Design
 For anyone wishing to examine the codebase or extend it, here is a quick overview
