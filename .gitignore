@@ -2,6 +2,7 @@
 _misc
 src/**/*.class
 okelydokuly.sublime-workspace
+examples/solved
 
 ### OSX ###
 .DS_Store

@@ -2,7 +2,6 @@
 
 OkelyDokuly is a command-line Sudoku puzzle solver written in Java.
 
-<!--- ---------------------------80chars----------------------------------- --->
 
 ## Introduction
 
@@ -29,10 +28,10 @@ $ java net.mattjw.okelydokuly.Solver ../examples/sd_ex0.csv
 ```
 
 As demonstrated above, this displays the solution on the command line. To save the
-solution to a CSV file:
+solution to a CSV file in the current directory:
 
 ```
-$ java net.mattjw.okelydokuly.Solver ../examples/sd_ex0.csv ../examples/solved/ex0_sol.csv
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_ex0.csv ex0_sol.csv
 ```
 
 To display usage information, use the `--help` flag:
@@ -55,7 +54,10 @@ Options:
 ```
 
 OkelyDokuly was written and tested to run with Java SE 7 and 8. The application has
-no third-party dependencies.
+no third-party dependencies. If you don't have the Java runtime environment, visit 
+[Oracle](http://www.oracle.com/technetwork/java/javase) to download
+it. If you'd like to compile from scratch, you'll also need to Java Development Kit.
+Instructions to compile OkelyDokuly are included later in this readme.
 
 ## Sudoku File Format
 
@@ -92,8 +94,9 @@ testing purposes.
 ## Building from Source
 
 Source files are located in the `src` directory. You may want to build these 
-yourself. The application has been tested to compile with both JDK 7 and JDK8.
-There are no third-party dependencies.
+yourself. The application has been tested to compile with both JDK 7 and JDK 8.
+There are no third-party dependencies. To download and install the JDK for
+your platform please refer to [Oracle's](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) instructions.
 
 Here are three ways to build the project.
 
