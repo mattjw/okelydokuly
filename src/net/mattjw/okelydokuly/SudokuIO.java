@@ -40,6 +40,7 @@ public class SudokuIO {
      *
      * @param f A file containing the Sudoku grid.
      * @return The parsed Sudoku grid.
+     * @throws FileNotFoundException Thrown by Scanner if file cannot be found.
      */
     public static Grid parseSudokuFile(File f) throws FileNotFoundException {
         Scanner in = new Scanner(f);
@@ -108,8 +109,8 @@ public class SudokuIO {
      * 
      * @param grid Grid to be written.
      * @param f The file to write the grid to.
-     * @exception FileNotFoundException Problem initialising output file.
-     * @exception IOException Problem while writing to file.
+     * @throws FileNotFoundException Problem initialising output file.
+     * @throws IOException Problem while writing to file.
      */
     public static void writeSudokuFile(Grid grid, File f) throws FileNotFoundException, IOException {
         PrintWriter wrtr = new PrintWriter(f);

@@ -61,6 +61,11 @@ public class Grid {
      *
      * It does not check if the arrangement of values on the grid is valid for
      * a sudoku grid, or if the grid is solvable.
+     *
+     * The matrix stored internally is a deep copy of the argument, ensuring
+     * that the argument matrix is unaffected by internal changes.
+     *
+     * @param matrix A two-dimensional array representing a Sudoku grid.
      */
     public Grid(int[][] matrix) {
         /* Validate the matrix */
@@ -80,7 +85,10 @@ public class Grid {
             }
         }
 
-        this.matrix = matrix;
+        /* Deep copy the matrix */
+        this.matrix = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++)
+            System.arraycopy(matrix[i], 0, this.matrix[i], 0, matrix[i].length);
         
         /* Set up the potential values matrix (the 2D array named aVals)
            and count the number of unassigned variables (for the purpose
@@ -379,6 +387,8 @@ public class Grid {
      * value.
      * Note that this method only checks for completeness of assignment -- it is
      * not concerned with any consistency checking.
+     *
+     * @return True if assignment is complete.
      */
     public boolean isComplete() {
         return numAssigned == 81;

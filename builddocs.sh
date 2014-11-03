@@ -9,8 +9,8 @@ packageroot=net
 #
 # Ensure docs destination exists, and clean it
 echo "cleaning..."
-rm -ri ./$dest
 mkdir -p ./$dest
+rm -ri ./$dest/*
 
 #
 # Build the codebase's Javadoc

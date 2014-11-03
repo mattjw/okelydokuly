@@ -30,7 +30,9 @@ for fpth in $egdir/*.csv
 do
     f=`basename $fpth`
     echo "[solving: $f]"
+    echo "output to command line..."
     java -cp $classroot $appclass $egdir/$f
+    echo "output to file..."
     java -cp $classroot $appclass $egdir/$f $solvdir/$f
     echo
 done

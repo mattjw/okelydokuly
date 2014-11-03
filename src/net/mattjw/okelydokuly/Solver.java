@@ -18,10 +18,13 @@ import net.mattjw.okelydokuly.ArgParse.Arguments;
  * Solve Sudoku puzzles using a constraint-satisfcation backtracking search.
  *
  * This class has two purposes:
- *  1. It implements a backtracking search algorithm which solves the Sudoku
- *     puzzle as a constraint satisfaction problem, relying heavily on the 
- *     features implemented in `Grid`.
- *  2. It is the application that acts as the front-end of the Sudoku solver.
+ * <ul>
+ *  <li> It implements a backtracking search algorithm which solves the Sudoku
+ *       puzzle as a constraint satisfaction problem, relying heavily on the 
+ *       features implemented in `Grid`. </li>
+ *  <li> It is the application that acts as the front-end of the Sudoku solver.
+ *       </li>
+ *  </ul>
  */
 public class Solver
 {
@@ -78,6 +81,10 @@ public class Solver
     private static final int RETCODE_FILEIO = 2;
     private static final int RETCODE_UNSOLVED = 3;
     
+    /**
+     * Main point of entry for the Sudoku solver.
+     * @param rawArgs Command line arguments.
+     */
     public static void main(String[] rawArgs) {
         //
         // Parse arguments

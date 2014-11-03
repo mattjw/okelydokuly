@@ -54,6 +54,9 @@ Options:
   --help    Display this help prompt.
 ```
 
+OkelyDokuly was written and tested to run with Java SE 7 and 8. The application has
+no third-party dependencies.
+
 ## Sudoku File Format
 
 Sudoku puzzles are represented in plain text as a 9x9 grid of comma-separated
@@ -75,23 +78,26 @@ Here is an example unsolved grid in this format:
 4,0,0,0,2,9,1,7,0
 ```
 
-Whitespace around cells (spaces and tabs) and at the beginning and of each line 
+Whitespace around cells (spaces and tabs) and at the beginning and end of each line 
 is also permitted.
 
 ### Example puzzles
 
 A selection of example Sudoku puzzles can be found in the `examples` directory. 
-Files named `sd_ex*.csv` are valid (but not yet solved) puzzles. 
-
-Files named `sd_bad*.csv` are unsolvable or malformed in some way. These are
-included for testing purposes.
+Files named `sd_ex*.csv` are valid (but not yet solved) puzzles. Files named
+`sd_bad*.csv` are unsolvable or malformed in some way. These are included for
+testing purposes.
 
 
 ## Building from Source
 
-Source files are located in the `src` directory. 
+Source files are located in the `src` directory. You may want to build these 
+yourself. The application has been tested to compile with both JDK 7 and JDK8.
+There are no third-party dependencies.
 
-### Manual Build
+Here are three ways to build the project.
+
+### 1. Manual Build
 
 To build manually, change directory to the repository root (the directory above
 `src`) and execute the following:
@@ -100,52 +106,46 @@ To build manually, change directory to the repository root (the directory above
 $ javac -d bin -cp bin src/*/*/*/*.java
 ```
 
-This will output the class files the `bin` directory. Once compiled, the solver 
-can be run according to the instructions at the start of the readme. It can
-also be useful to explicitly state the classpath (using the -cp option), to
-allow the solver to be run from elsewhere; e.g., from the repository root:
+This will compile from `src` and output the class files to the `bin` directory. 
+Once compiled, the solver can be run according to the instructions at the start
+of the readme. 
+
+It can also be useful to explicitly state the classpath (using the -cp option), 
+to allow the solver to be run from elsewhere; e.g., from the repository root:
 
 ```
 $ java -cp bin net.mattjw.okelydokuly.Solver examples/sd_ex0.csv
 ```
 
-### Build with Ant
+### 2. Build Script
+
+`build.sh` is a Bash shell script that automates the manual build process. The
+script will prepare the `bin` directory before compilation. This includes erasing
+any files in `bin` leftover from a previous build.
+
+To run the build script, open your terminal at the repository root directory and
+run:
+
+```
+$ build.sh
+```
+
+
+### 3. Build with Ant
 
 A simple configuration file for Ant has been written (see: `build.xml`) to
-automate the compilation process. Assuming you have Ant installed, simply
-change to the repository root directory (the directory containing `build.xml`)
-and run
+automate the compilation process. Assuming you have 
+[Apache Ant](http://ant.apache.org/) installed, simply change to the repository
+root directory (the directory containing `build.xml`) and run:
 
 ```
 $ ant
 ```
 
-### Build Script
-
-finally...
-
-## More Usage Examples
-
-```
-bla
-```
-
-Sudoku file format should be... blaaa.
-
-For installation, features, etc., please read below.
-
-
-
-### Features
-
-More discussion on features.
-
-Any number of lines of whitespace are permitted after the grid.
-
-Grids with non-unique solutions will still be solved.
-
 
 ## Design
+For anyone wishing to examine the codebase or extend it, here a quick overview
+of the project.
 
 ### Project Structure
 
@@ -154,32 +154,44 @@ The project is structured around the following subdirectories:
 ```
 ├── bin              Compiled class files
 ├── doc              Class documentation (via Javadoc)
-├── examples         Example Sudoku puzzles
+├── examples         A selection of example Sudoku puzzles
 └── src              Source code
 ```
 
 ### Class Documentation
 
-Javadoc documenation for the codebase is included in the `doc` directory. There 
-is also a
+Javadoc documenation for the codebase is included in the `doc` directory. To 
+rebuild the documentation yourself, try the following:
 
-### How the solver works
+```
+javadoc -d ./doc -sourcepath ./src -subpackages net
+```
 
-Represented as a Constraint Satisfaction Problem (CSP) and solved using 
-backtracking search with forwarding checking and constraint propagation. This
-method is efficient even for computationally challenging Sudoku grids.
+To automate the Javadoc build, which includes cleaning the output directory,
+the Bash script `builddocs.sh` is included.
 
-The Wikipedia page for CSPs offers a good introduction, 
-For anyone interested in CSPs in general, I'd recommend the excellent [Artificial
+### How the Solver Works
+
+The solver represents Sudoku as a Constraint Satisfaction Problem (CSP) and 
+solves it using a backtracking search with forwarding checking and 
+constraint propagation. This method is efficient even for computationally 
+challenging Sudoku grids.
+
+The [Wikipedia page](http://en.wikipedia.org/wiki/Constraint_satisfaction_problem) 
+for CSPs offers a good introduction, including some detail on the algorithms 
+that can be used to solve them.
+For anyone interested in CSPs in general, there's the excellent [Artificial
 Intelligence a Modern Approach](http://aima.cs.berkeley.edu/) by Stuart Russell 
-and Peter Norvig. Chapter 6 of the third edition is dedicated to constraint 
-satisfaction problems, and even includes a discussion of representing Sudoku as
+and Peter Norvig. Chapter 6 in the third edition is dedicated to constraint 
+satisfaction problems, and includes a discussion of representing Sudoku as
 a CSP.
 
-For anyone wishing to build on this codebase, inline documentation has been 
-written with Javadoc. See `doc` directory for the typet HTML documentation.
+### Style Conventions
 
 Code written following Google's [Java style guide](http://google-styleguide.googlecode.com/svn/trunk/javaguide.html).
 
+## Author
+
+Written by Matt J Williams. 2014. [mattjw.net](http://www.mattjw.net)
 
 <!--- ---------------------------80chars----------------------------------- --->
