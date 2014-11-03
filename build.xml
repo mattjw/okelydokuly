@@ -3,4 +3,9 @@
         <mkdir dir="bin"/>
         <javac includeantruntime="false" srcdir="src" destdir="bin"/>
     </target>
+    
+    <target name="doc" description="generate documentation">
+        <javadoc sourcepath="src" destdir="doc"/>
+      </target>
 </project>
+

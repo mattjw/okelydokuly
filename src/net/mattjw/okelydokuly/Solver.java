@@ -28,6 +28,8 @@ import net.mattjw.okelydokuly.ArgParse.Arguments;
  */
 public class Solver
 {
+    private static final String SUGGEST_HELP = "Run with --help to display usage information.";
+
     /**
      * This method implements a backtracking search with forward checking algorithm
      * to solve the inputted Sudoku grid.
@@ -94,8 +96,7 @@ public class Solver
         }
         catch(IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
-            System.out.println();
-            System.out.println(ArgParse.USAGE);
+            System.out.println(SUGGEST_HELP);
             System.exit(RETCODE_ARGPARSE);
         }
             
