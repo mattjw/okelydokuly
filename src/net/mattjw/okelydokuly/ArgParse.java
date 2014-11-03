@@ -31,13 +31,13 @@ public class ArgParse {
         NAME + ": a Sudoku puzzle solver\n" + 
         "\n" +
         "Usage: \n" +
-        "  " + APP_CLASSNAME + " [--help] infile [outfile]\n" +
+        "  " + APP_CLASSNAME + " [--help] <infile> [<outfile>]\n" +
         "\n" +
-        "  Solves the Sudoku in infile and saves the solution to outfile. If the output\n" +
-        "  file is ommitted, the solution is printed to the command line.\n" +
+        "  Solves the Sudoku in <infile> and saves the solution to <outfile>. If the output\n" +
+        "  file is omitted, the solution is printed to the command line.\n" +
         "\n" +
-        "  Sudoku files are read and written in plain text 9x9 comma-separated values\n" +
-        "  format.\n" +
+        "  Sudoku files are read and written in plain-text 9x9 comma-separated values\n" +
+        "  format. A blank cell is represented by a 0.\n" +
         "\n" +
         "Options:\n" + 
         "  --help    Display this help prompt.\n";

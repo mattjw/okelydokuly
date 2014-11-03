@@ -86,7 +86,7 @@ public class Solver
             args = ArgParse.parse(rawArgs);
         }
         catch(IllegalArgumentException ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
             System.out.println();
             System.out.println(ArgParse.USAGE);
             System.exit(RETCODE_ARGPARSE);
@@ -126,11 +126,15 @@ public class Solver
             g = SudokuIO.parseSudokuFile(fIn);
         }
         catch(FileNotFoundException ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
+            System.exit(RETCODE_FILEIO);
+        }
+        catch(InvalidSudokuFileException ex) {
+            System.out.println(ex.getMessage());
             System.exit(RETCODE_FILEIO);
         }
         catch(InvalidSudokuGridException ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
             System.exit(RETCODE_FILEIO);
         }
 
@@ -155,7 +159,7 @@ public class Solver
                 System.exit(RETCODE_OK);
             }
             catch(IOException ex) {
-                System.out.println(ex);
+                System.out.println(ex.getMessage());
                 System.exit(RETCODE_FILEIO);
             }
         }

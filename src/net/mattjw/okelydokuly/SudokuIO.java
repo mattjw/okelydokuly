@@ -52,7 +52,7 @@ public class SudokuIO {
                 throw new InvalidSudokuFileException(String.format("Insufficient rows. File contained only %d rows.", row));
 
             // Process the row
-            String str = in.next();
+            String str = in.nextLine();
             int[] mRow = new int[9];
 
             StringTokenizer tokens = new StringTokenizer(str, new Character(CELL_DELIM).toString());
@@ -126,8 +126,7 @@ public class SudokuIO {
                 if(col < 8)
                     wrtr.print(CELL_DELIM);
             }
-            if(row < 8)
-                wrtr.println();
+            wrtr.println();
         }
 
         // PrintWriter squelches write errors. Let's make them explicit

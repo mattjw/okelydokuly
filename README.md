@@ -2,10 +2,129 @@
 
 OkelyDokuly is a command-line Sudoku puzzle solver written in Java.
 
+<!--- ---------------------------80chars----------------------------------- --->
 
-## Usage
+## Introduction
 
-Quickstart. Get started right away, use the precompiled classes (see). To get it running...
+This repository includes source code, compiled class files, example Sudoku 
+puzzles,and class file, and class documenation (exported to HTML via Javadoc).
+Information on each of these components can be found in this readme.
+
+To get started solving Sudoku puzzles right away, the compiled class files 
+can be found in the `bin` directory. To solve one of the example Sudoku puzzles
+provided in this repository, open your terminal at the `bin` directory and try
+the following:
+
+```
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_ex0.csv
+1,3,5,2,9,7,8,6,4
+9,8,2,4,1,6,7,5,3
+7,6,4,3,8,5,1,9,2
+2,1,8,7,3,9,6,4,5
+5,9,7,8,6,4,2,3,1
+6,4,3,1,5,2,9,7,8
+4,2,6,5,7,1,3,8,9
+3,5,9,6,2,8,4,1,7
+8,7,1,9,4,3,5,2,6
+```
+
+As demonstrated above, this displays the solution on the command line. To save the
+solution to a CSV file:
+
+```
+$ java net.mattjw.okelydokuly.Solver ../examples/sd_ex0.csv ../examples/solved/ex0_sol.csv
+```
+
+To display usage information, use the `--help` flag:
+
+```
+$ java net.mattjw.okelydokuly.Solver --help
+okelydokuly: a Sudoku puzzle solver
+
+Usage: 
+  Solver [--help] <infile> [<outfile>]
+
+  Solves the Sudoku in <infile> and saves the solution to <outfile>. If the output
+  file is omitted, the solution is printed to the command line.
+
+  Sudoku files are read and written in plain-text 9x9 comma-separated values
+  format. A blank cell is represented by a 0.
+
+Options:
+  --help    Display this help prompt.
+```
+
+## Sudoku File Format
+
+Sudoku puzzles are represented in plain text as a 9x9 grid of comma-separated
+cells. Each row of the grid should appear on a new line. Each cell on a line
+should be separated by a comma. A blank Sudoku cell should be represented by a
+`0`.
+
+Here is an example unsolved grid in this format:
+
+```
+0,6,3,4,9,0,0,0,1
+0,0,0,0,0,0,7,0,9
+0,1,9,0,0,0,0,0,0
+0,0,1,0,0,2,9,3,0
+9,0,0,1,0,7,0,0,2
+0,7,8,9,0,0,4,0,0
+0,0,0,0,0,0,8,2,0
+3,0,6,0,0,0,0,0,0
+4,0,0,0,2,9,1,7,0
+```
+
+Whitespace around cells (spaces and tabs) and at the beginning and of each line 
+is also permitted.
+
+### Example puzzles
+
+A selection of example Sudoku puzzles can be found in the `examples` directory. 
+Files named `sd_ex*.csv` are valid (but not yet solved) puzzles. 
+
+Files named `sd_bad*.csv` are unsolvable or malformed in some way. These are
+included for testing purposes.
+
+
+## Building from Source
+
+Source files are located in the `src` directory. 
+
+### Manual Build
+
+To build manually, change directory to the repository root (the directory above
+`src`) and execute the following:
+
+```
+$ javac -d bin -cp bin src/*/*/*/*.java
+```
+
+This will output the class files the `bin` directory. Once compiled, the solver 
+can be run according to the instructions at the start of the readme. It can
+also be useful to explicitly state the classpath (using the -cp option), to
+allow the solver to be run from elsewhere; e.g., from the repository root:
+
+```
+$ java -cp bin net.mattjw.okelydokuly.Solver examples/sd_ex0.csv
+```
+
+### Build with Ant
+
+A simple configuration file for Ant has been written (see: `build.xml`) to
+automate the compilation process. Assuming you have Ant installed, simply
+change to the repository root directory (the directory containing `build.xml`)
+and run
+
+```
+$ ant
+```
+
+### Build Script
+
+finally...
+
+## More Usage Examples
 
 ```
 bla
@@ -16,15 +135,6 @@ Sudoku file format should be... blaaa.
 For installation, features, etc., please read below.
 
 
-### Build
-
-Build guide.
-
-### Example puzzles
-
-A selection of example Sudoku puzzles can be found in the `examples` directory. Files named `sd_ex*.csv` are valid (but incomplete) puzzles. 
-
-Files named `sd_bad*.csv` are unsolvable in some way, either because they are unsatisfiable (ambiguous assignments) or because the grid does not meet the constraints of a valid Sudoku puzzle. These are included for testing purposes.
 
 ### Features
 
@@ -34,24 +144,42 @@ Any number of lines of whitespace are permitted after the grid.
 
 Grids with non-unique solutions will still be solved.
 
+
 ## Design
 
--
+### Project Structure
+
+The project is structured around the following subdirectories:
+
+```
+├── bin              Compiled class files
+├── doc              Class documentation (via Javadoc)
+├── examples         Example Sudoku puzzles
+└── src              Source code
+```
+
+### Class Documentation
+
+Javadoc documenation for the codebase is included in the `doc` directory. There 
+is also a
 
 ### How the solver works
 
 Represented as a Constraint Satisfaction Problem (CSP) and solved using 
-backtracking search with forwarding checking and constraint propagation. 
-Wikiepdia page [...]. 
+backtracking search with forwarding checking and constraint propagation. This
+method is efficient even for computationally challenging Sudoku grids.
 
-For anyone interested in CSPs in general, I'd recommend the excellent Artificial
-Intelligence a Modern Approach by Stuart Russell and Peter Norvig. Chapter 6 of
-the third edition is dedicated to constraint satisfaction problems, and even 
-includes a discussion of modelling Sudoku as a CSP.
+The Wikipedia page for CSPs offers a good introduction, 
+For anyone interested in CSPs in general, I'd recommend the excellent [Artificial
+Intelligence a Modern Approach](http://aima.cs.berkeley.edu/) by Stuart Russell 
+and Peter Norvig. Chapter 6 of the third edition is dedicated to constraint 
+satisfaction problems, and even includes a discussion of representing Sudoku as
+a CSP.
 
-For anyone wishing to build on this codebase, inline documentation has been written with Javadoc. See `doc` directory for the typet HTML documentation.
+For anyone wishing to build on this codebase, inline documentation has been 
+written with Javadoc. See `doc` directory for the typet HTML documentation.
 
 Code written following Google's [Java style guide](http://google-styleguide.googlecode.com/svn/trunk/javaguide.html).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<!--- ---------------------------80chars----------------------------------- --->

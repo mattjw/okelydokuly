@@ -1,6 +1,7 @@
 ### Project-specific ###
 _misc
 src/**/*.class
+okelydokuly.sublime-workspace
 
 ### OSX ###
 .DS_Store
