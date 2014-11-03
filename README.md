@@ -130,7 +130,7 @@ To run the build script, open your terminal at the repository root directory and
 run:
 
 ```
-$ build.sh
+$ sh build.sh
 ```
 
 
